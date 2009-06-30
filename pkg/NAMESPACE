@@ -1,0 +1,68 @@
+useDynLib(mco)
+
+## mco.R
+export(paretoSet)
+S3method(paretoSet, matrix)
+
+export(paretoFront)
+S3method(paretoFront, matrix)
+
+export(paretoFilter)
+S3method(paretoFilter, matrix)
+
+## nsga2.R:
+export(nsga2)
+
+S3method(plot, nsga2)
+S3method(plot, nsga2.collection)
+S3method(paretoSet, nsga2)
+S3method(paretoFront, nsga2)
+
+## qs.R
+export(normalizeFront)
+export(generationalDistance)
+export(generalizedSpread)
+export(dominatedHypervolume)
+export(epsilonIndicator)
+
+## functions.R
+export(belegundu)
+export(belegundu.constr)
+
+export(binh1)
+
+export(binh2)
+export(binh2.constr)
+
+export(binh3)
+
+export(deb3)
+
+export(fonseca1)
+export(fonseca2)
+
+export(gianna)
+
+export(hanne1)
+export(hanne1.constr)
+
+export(hanne2)
+export(hanne2.constr)
+
+export(hanne3)
+export(hanne3.constr)
+
+export(hanne4)
+export(hanne4.constr)
+
+export(hanne5)
+export(hanne5.constr)
+
+export(jimenez)
+export(jimenez.constr)
+
+export(vnt)
+
+export(zdt1)
+export(zdt2)
+export(zdt3)
