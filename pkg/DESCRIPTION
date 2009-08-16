@@ -1,6 +1,5 @@
 Package: mco
-Version: 1.0.6
-Date: 2009-06-04
+Version: 1.0.7
 Title: Multi criteria optimization algorithms and related functions
 Description: Functions for multi criteria optimization using genetic 
   algorithms and related test problems

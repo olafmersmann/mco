@@ -39,5 +39,6 @@ paretoFilter.matrix <- function(x, ...) {
       }
     }
   }
-  return(x[is.optimal,])
+  ## Always return a matrix!
+  return(x[is.optimal,,drop=FALSE])
 }
