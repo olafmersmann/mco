@@ -92,4 +92,4 @@ paretoSet.nsga2 <- function(x, ...)
   x$par[x$pareto.optimal,]
 
 paretoFront.nsga2 <- function(x, ...)
-  x$value[x$pareto.optimal,]
+  x$value[x$pareto.optimal,,drop=FALSE]
