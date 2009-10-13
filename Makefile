@@ -6,13 +6,13 @@ install: clean
 #test: install
 #	Rscript pkg/inst/unittests/runner.r
 
-check: clean data
+check: clean
 	R CMD check pkg && rm -fR pkg.Rcheck
 
 clean:
 	rm -fR pkg/src/*.o pkg/src/*.so pkg.Rcheck .RData .Rhistory
 
-pkg: clean data
+pkg: clean
 	echo "Date: $(date +%Y-%m-%d)" >> pkg/DESCRIPTION
 	git log --no-merges -M --date=iso --format=medium pkg/ > pkg/ChangeLog
 	R CMD build pkg

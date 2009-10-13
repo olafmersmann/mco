@@ -7,7 +7,6 @@
 \usage{
 nsga2(fn, idim, odim, ..., constraints = NULL, cdim = 0, lower.bounds = rep(-Inf, idim), upper.bounds = rep(Inf, idim), popsize = 100, generations = 100, cprob = 0.7, cdist = 5, mprob = 0.2, mdist = 10)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{fn}{Function}
   \item{idim}{Input dimension}
@@ -24,9 +23,6 @@ nsga2(fn, idim, odim, ..., constraints = NULL, cdim = 0, lower.bounds = rep(-Inf
   \item{cdist}{Crossing distribution index}
   \item{mprob}{Mutation probability}
   \item{mdist}{Mutation distribution index}
-}
-\details{
-  
 }
 \value{
   If generation is an integer, a list describing the final population with components \code{par},
