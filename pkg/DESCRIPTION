@@ -1,5 +1,5 @@
 Package: mco
-Version: 1.0.7
+Version: 1.0.10
 Title: Multi criteria optimization algorithms and related functions
 Description: Functions for multi criteria optimization using genetic 
   algorithms and related test problems
@@ -8,7 +8,7 @@ Author:
   and Detlef Steuer <detlef.steuer@hsu-hamburg.de>
   and Olaf Mersmann <olafm@statistik.uni-dortmund.de>
 Maintainer: Olaf Mersmann <olafm@statistik.uni-dortmund.de>
-Depends: R (>= 2.7.0)
+Depends: R (>= 2.15.0)
 Suggests: scatterplot3d
 License: GPL-2
 URL: http://r-forge.r-project.org/projects/desire

@@ -42,32 +42,31 @@ static double calc_eps_ind(double  *a, size_t size_a,
 						   size_t dim, method_t method) {
     size_t i, j, k;
     double  eps, eps_j, eps_k, eps_temp;
-	
-	eps = additive == method ? DBL_MIN : 0.0;
+    eps_k = eps_j = 0.0;
+    eps = additive == method ? DBL_MIN : 0.0;
 
     for (i = 0; i < size_a; i++) {
-		for (j = 0; j < size_b; j++) {
-			for (k = 0; k < dim; k++) {
-				switch (method) {
-				case additive:
-					// eps_temp = b[j * dim + k] - a[i * dim + k];
-					eps_temp = b[j + size_b * k] - a[i + size_a * k];
-					break;
-				case multiplicative:
-					eps_temp = b[j * dim + k] / a[i * dim + k];
-				}
-				if ((0 == k) || (eps_k < eps_temp))
-					eps_k = eps_temp;
-			}
-			if ((0 == j) || (eps_j > eps_k))
-				eps_j = eps_k;
+	for (j = 0; j < size_b; j++) {
+	    for (k = 0; k < dim; k++) {
+		switch (method) {
+		case additive:
+		    // eps_temp = b[j * dim + k] - a[i * dim + k];
+		    eps_temp = b[j + size_b * k] - a[i + size_a * k];
+		    break;
+		case multiplicative:
+		    eps_temp = b[j * dim + k] / a[i * dim + k];
 		}
-		if ((0 == i) || (eps < eps_j))
-			eps = eps_j;
+		if ((0 == k) || (eps_k < eps_temp))
+		    eps_k = eps_temp;
+	    }
+	    if ((0 == j) || (eps_j > eps_k))
+		eps_j = eps_k;
+	}
+	if ((0 == i) || (eps < eps_j))
+	    eps = eps_j;
     }    
     return eps;
 }
-
 
 #define UNPACK_REAL_VECTOR(S, D, N)             \
   double *D = REAL(S);                          \

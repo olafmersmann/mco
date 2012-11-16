@@ -5,22 +5,27 @@
   Multicriterion optimization algorithm
 }
 \usage{
-nsga2(fn, idim, odim, ..., constraints = NULL, cdim = 0, lower.bounds = rep(-Inf, idim), upper.bounds = rep(Inf, idim), popsize = 100, generations = 100, cprob = 0.7, cdist = 5, mprob = 0.2, mdist = 10)
+  nsga2(fn, idim, odim, ...,
+        constraints = NULL, cdim = 0,
+        lower.bounds = rep(-Inf, idim), upper.bounds = rep(Inf, idim),
+        popsize = 100, generations = 100,
+        cprob = 0.7, cdist = 5,
+        mprob = 0.2, mdist = 10)
 }
 \arguments{
-  \item{fn}{Function}
+  \item{fn}{Function to be minimized}
   \item{idim}{Input dimension}
   \item{odim}{Output dimension}
   \item{\dots}{Arguments passed through to 'fn'}
   \item{constraints}{Constraint function}
   \item{cdim}{Constraint dimension}
-  \item{lower.bounds}{Lower bound of input}
-  \item{upper.bounds}{Upper bound of input}
+  \item{lower.bounds}{Lower bound of parameters}
+  \item{upper.bounds}{Upper bound of parameters}
   \item{popsize}{Size of population}
   \item{generations}{Number of generations to breed. If a vector, then
     the result will contain the population at each given generation.}
-  \item{cprob}{Crossing probability}
-  \item{cdist}{Crossing distribution index}
+  \item{cprob}{Crossover probability}
+  \item{cdist}{Crossover distribution index}
   \item{mprob}{Mutation probability}
   \item{mdist}{Mutation distribution index}
 }
@@ -35,6 +40,9 @@ nsga2(fn, idim, odim, ..., constraints = NULL, cdim = 0, lower.bounds = rep(-Inf
   A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II.
   \emph{IEEE Transactions on Evolutionary Computation}, \bold{6 (8)}
   (2002), 182-197.
+}
+\seealso{\code{\link{zdt1}} for more examples and a list of
+  multiobjective test functions.
 }
 \author{
   Heike Trautmann \email{trautmann@statistik.uni-dortmund.de},
@@ -72,5 +80,18 @@ r2 <- nsga2(vnt, 2, 3,
            lower.bounds=rep(-3, 2),
            upper.bounds=rep(3, 2))
 plot(r2)
+
+## Example using constraints:
+## minimize     f(x) = (x[1]^2, x[2]^2)
+## subject to   g(x) = (sum(x) - 5) >= 0
+f <- function(x) { x^2 }
+g <- function(x) { sum(x) - 5 }
+res <- nsga2(f, 2, 2, generations=500,
+             lower.bounds=c(0, 0), upper.bounds=c(10, 10),
+             constraints=g, cdim=1)
+opar <-par(mfrow=c(1,2))
+plot(res, xlab="y1", ylab="y2", main="Objective space")
+plot(res$par, xlab="x1", ylab="x2", main="Parameter space")
+par(opar)
 }
 \keyword{optimize}

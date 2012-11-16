@@ -98,10 +98,8 @@ static void population_initialize(nsga2_ctx *ctx, population *pop) {
 
 static void insert (list *node, int x) {
   list *temp;
-  if (node==NULL) {
-    printf("\n Error!! asked to enter after a NULL pointer, hence exiting \n");
-    exit(1);
-  }
+  if (node == NULL)
+      error("Asked to insert a NULL pointer.");
   temp = (list *)Calloc(1, list);
   temp->index = x;
   temp->child = node->child;
@@ -115,10 +113,8 @@ static void insert (list *node, int x) {
 
 static list* del (list *node) {
   list *temp;
-  if (node==NULL) {
-    printf("\n Error!! asked to delete a NULL pointer, hence exiting \n");
-    exit(1);
-  }
+  if (node == NULL)
+      error("Asked to delete a NULL pointer.");
   temp = node->parent;
   temp->child = node->child;
   if (temp->child!=NULL) {
@@ -302,7 +298,6 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
     /* Possibly evaluate constraints */
     pop->ind[i].constraint_violation = 0.0;
     if (ctx->constraint_dim > 0) {
-      SEXP cval;
       PROTECT(s_cval = eval(ccall, ctx->environment));
       REPROTECT(s_cval = coerceVector(s_cval, REALSXP), ip);
       for (j = 0; j < ctx->constraint_dim; ++j) {
@@ -872,7 +867,7 @@ SEXP do_nsga2(SEXP s_function,
 	      SEXP s_mutation_prob,
 	      SEXP s_mutation_dist) {
   nsga2_ctx ctx;
-  unsigned int i, j, gen, gc;
+  unsigned int i, j, gen;
   size_t popsize;
   int *generations;
   R_len_t n_generations;

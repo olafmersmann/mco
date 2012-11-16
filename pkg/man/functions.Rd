@@ -63,8 +63,8 @@ zdt3(x)
   \item{x}{Input vector}
 }
 \value{
+  Function value.
 }
-\references{ ~put references to the literature/web site here ~ }
 \author{
   Heike Trautmann \email{trautmann@statistik.tu-dortmund.de},
   Detlef Steuer \email{steuer@hsu-hamburg.de} and
