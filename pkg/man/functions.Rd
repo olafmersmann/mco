@@ -71,7 +71,7 @@ zdt3(x)
   Olaf Mersmann \email{olafm@statistik.tu-dortmund.de}
 }
 \examples{
-
+\dontrun{
 nsga2(belegundu, 2, 2,
       constraints=belegundu.constr, cdim=2,
       lower.bounds=c(0, 0), upper.bounds=c(5, 3))
@@ -133,4 +133,5 @@ nsga2(zdt2, 30, 2,
 
 nsga2(zdt3, 30, 2,
       lower.bounds=rep(0, 30), upper.bounds=rep(1, 30))
+}
 }
