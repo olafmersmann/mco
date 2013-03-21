@@ -50,7 +50,6 @@
   Olaf Mersmann \email{olafm@statistik.uni-dortmund.de}
 }
 \examples{
-\dontrun{
 ## Binh 1 problem:
 binh1 <- function(x) {
   y <- numeric(2)
@@ -94,6 +93,5 @@ opar <-par(mfrow=c(1,2))
 plot(res, xlab="y1", ylab="y2", main="Objective space")
 plot(res$par, xlab="x1", ylab="x2", main="Parameter space")
 par(opar)
-}
 }
 \keyword{optimize}
