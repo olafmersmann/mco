@@ -1,0 +1,4 @@
+examples
+src/*.o
+src/*.so
+mco_*.tar.gz

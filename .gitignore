@@ -1,2 +1,4 @@
 mco.Rcheck
 mco_*.tar.gz
+src/*.o
+src/*.so
