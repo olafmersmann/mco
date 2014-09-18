@@ -31,7 +31,11 @@
   \item{mdist}{Mutation distribution index}
   \item{vectorized}{If \code{TRUE}, the objective and constraint
     functions must be vectorized, i.e. accept a matrix instead of a
-    vector and return a matrix instead of a vector.}
+    vector and return a matrix instead of a vector. The matrix is
+    structured such that one individual parameter combination is
+    contained in each row (the matrix has shape \code{popsize * idim})
+    and each objective is stored in a column of the returned matrix (the
+    returned matrix must have shape \code{popsize * odim})}
 }
 \value{
   If generation is an integer, a list describing the final population
