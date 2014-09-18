@@ -275,7 +275,8 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   SEXP s_input, s_fval, s_cval;
   
   /* Allocate input vector and copy x into it: */
-  PROTECT(s_input = allocVector(REALSXP, ctx->input_dim));
+  /* PROTECT(s_input = allocVector(REALSXP, ctx->input_dim)); */
+  PROTECT(s_input = allocMatrix(REALSXP, pop->size, ctx->input_dim));
   double *input = REAL(s_input);
 
   /* Set input arg for fcall and ccall */
@@ -283,31 +284,44 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   if (ctx->constraint_dim > 0)
     SETCADR(ccall, s_input);
   
-  /* for every individual: */
+  /* Build input matrix for vectorized evaluation: */
   for (i=0; i < pop->size; ++i) { 
-    /* Copy input values into SEXP */
-    for (j = 0; j < ctx->input_dim; ++j)
-      input[j] = pop->ind[i].input[j];
-
-    /* Evalate function */
-    PROTECT_WITH_INDEX(s_fval = eval(fcall, ctx->environment), &ip);
-    REPROTECT(s_fval = coerceVector(s_fval, REALSXP), ip);
-    for (j = 0; j < ctx->objective_dim; ++j)
-      pop->ind[i].objective[j] = REAL(s_fval)[j];
-
-    /* Possibly evaluate constraints */
-    pop->ind[i].constraint_violation = 0.0;
-    if (ctx->constraint_dim > 0) {
-      PROTECT(s_cval = eval(ccall, ctx->environment));
-      REPROTECT(s_cval = coerceVector(s_cval, REALSXP), ip);
-      for (j = 0; j < ctx->constraint_dim; ++j) {
-	pop->ind[i].constraint[j] = REAL(s_cval)[j];
-	if (pop->ind[i].constraint[j] < 0.0) 
-	  pop->ind[i].constraint_violation += pop->ind[i].constraint[j];
-      }
-      UNPROTECT(1); /* cval */
+    for (j = 0; j < ctx->input_dim; ++j) {
+      input[i + j * pop->size] = pop->ind[i].input[j];
     }
-    UNPROTECT(1); /* fval */
+  }
+
+  /* Now evaluate and copy the result back into the pop sturcture: */
+  PROTECT(s_fval = eval(fcall, ctx->environment));
+  s_fval = coerceVector(s_fval, REALSXP);
+
+  for (i=0; i < pop->size; ++i) {
+    for (j = 0; j < ctx->objective_dim; ++j) {
+      pop->ind[i].objective[j] = REAL(s_fval)[i + j * pop->size];
+    }
+  }
+  UNPROTECT(1); /* s_fval */
+
+  /* Just for good measure we zero out the constraint violations: */
+  for (i = 0; i < pop->size; ++i) {
+    pop->ind[i].constraint_violation = 0.0;
+  }
+
+  /* Possibly evaluate constraints and copy the result back into the
+   * pop structure: 
+   */
+  if (ctx->constraint_dim > 0) {
+    PROTECT(s_cval = eval(ccall, ctx->environment));
+    s_cval = coerceVector(s_cval, REALSXP);
+
+    for (i=0; i < pop->size; ++i) {
+      for (j = 0; j < ctx->objective_dim; ++j) {
+        pop->ind[i].constraint[j] = REAL(s_cval)[i + j * pop->size];
+        if (pop->ind[i].constraint[j] < 0.0) 
+          pop->ind[i].constraint_violation += pop->ind[i].constraint[j];
+      }
+    }
+    UNPROTECT(1); /* s_cval */
   }
   UNPROTECT(1); /* s_input */
 }
