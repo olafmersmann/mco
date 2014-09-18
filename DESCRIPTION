@@ -1,15 +1,17 @@
 Package: mco
-Version: 1.0.12
+Version: 1.0.13
 Title: Multi criteria optimization algorithms and related functions
 Description: Functions for multi criteria optimization using genetic 
   algorithms and related test problems
-Author:
-  Heike Trautmann <trautmann@statistik.uni-dortmund.de>
-  and Detlef Steuer <detlef.steuer@hsu-hamburg.de>
-  and Olaf Mersmann <olafm@p-value.net>
-Maintainer: Olaf Mersmann <olafm@p-value.net>
-Depends: R (>= 2.15.0)
+Authors@R: c(
+    person("Olaf", "Mersmann", role=c("aut", "cre"), email="olafm@p-value.net"),
+    person("Heike", "Trautmann", role=c("ctb"), email="trautmann@wi.uni-muenster.de"),
+    person("Detlef", "Steuer", role=c("ctb"), email="detlef.steuer@hsu-hamburg.de"),
+    person("Bernd", "Bischl", role=c("ctb"), email="bernd_bischl@gmx.net"),
+    person("Kalyanmoy", "Deb", role=c("cph"))
+  )
+Depends: R (>= 3.0.0)
 Suggests: scatterplot3d
 License: GPL-2
-URL: http://r-forge.r-project.org/projects/desire
+URL: http://git.p-value.net/p/mco.git
 LazyData: yes
