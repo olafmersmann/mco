@@ -13,6 +13,8 @@ package_name <- function() {
 do_build <- function(args) {
   do_update("all")
   message("INFO: Building package.")
+  if (!file.exists("dist")) 
+    dir.create("dist")
   fn <- build(".", path="dist", quiet=TRUE)
   messagef("INFO: Package source tarball '%s' created.", fn)
 }
