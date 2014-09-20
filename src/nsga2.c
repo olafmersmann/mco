@@ -2,7 +2,7 @@
  * nsga2.c - C implementation of NSGA-II
  *
  * Portions of this file are taken from the reference implementation
- * by K. Deb et. al. 
+ * by K. Deb et. al.
  *
  * See http://www.iitk.ac.in/kangal/codes.shtml for the original code.
  *
@@ -87,9 +87,9 @@ static void population_initialize(nsga2_ctx *ctx, population *pop) {
   GetRNGstate();
   int i, j;
   for (i = 0; i < pop->size; ++i)  {
-    for (j=0; j<ctx->input_dim; ++j) { 
+    for (j=0; j<ctx->input_dim; ++j) {
       /* Generate random value between lower and upper bound */
-      double delta = ctx->upper_input_bound[j] - ctx->lower_input_bound[j];      
+      double delta = ctx->upper_input_bound[j] - ctx->lower_input_bound[j];
       pop->ind[i].input[j] = ctx->lower_input_bound[j]  + delta*unif_rand();
     }
   }
@@ -192,7 +192,7 @@ static void quicksort_dist(const population *pop, int *dist, int front_size) {
   q_sort_dist (pop, dist, 0, front_size-1);
 }
 
-static int rnd (int low, int high) {  
+static int rnd (int low, int high) {
   int res;
   if (low >= high) {
     res = low;
@@ -269,11 +269,10 @@ static individual* tournament (nsga2_ctx *ctx, individual *ind1, individual *ind
 
 static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   size_t i, j;
-  PROTECT_INDEX ip;
   SEXP fcall = ctx->function_call;
   SEXP ccall = ctx->constraint_call;
   SEXP s_input, s_fval, s_cval;
-  
+
   /* Allocate input vector and copy x into it: */
   /* PROTECT(s_input = allocVector(REALSXP, ctx->input_dim)); */
   PROTECT(s_input = allocMatrix(REALSXP, pop->size, ctx->input_dim));
@@ -283,9 +282,9 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   SETCADR(fcall, s_input);
   if (ctx->constraint_dim > 0)
     SETCADR(ccall, s_input);
-  
+
   /* Build input matrix for vectorized evaluation: */
-  for (i=0; i < pop->size; ++i) { 
+  for (i=0; i < pop->size; ++i) {
     for (j = 0; j < ctx->input_dim; ++j) {
       input[i + j * pop->size] = pop->ind[i].input[j];
     }
@@ -308,7 +307,7 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   }
 
   /* Possibly evaluate constraints and copy the result back into the
-   * pop structure: 
+   * pop structure:
    */
   if (ctx->constraint_dim > 0) {
     PROTECT(s_cval = eval(ccall, ctx->environment));
@@ -317,7 +316,7 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
     for (i=0; i < pop->size; ++i) {
       for (j = 0; j < ctx->objective_dim; ++j) {
         pop->ind[i].constraint[j] = REAL(s_cval)[i + j * pop->size];
-        if (pop->ind[i].constraint[j] < 0.0) 
+        if (pop->ind[i].constraint[j] < 0.0)
           pop->ind[i].constraint_violation += pop->ind[i].constraint[j];
       }
     }
@@ -501,9 +500,9 @@ static void assign_rank_and_crowding_distance (nsga2_ctx *ctx, population *new_p
   return;
 }
 
-static void crossover (nsga2_ctx *ctx, 
-		       individual *parent1, individual *parent2, 
-		       individual *child1, individual *child2) {
+static void crossover (nsga2_ctx *ctx,
+                       individual *parent1, individual *parent2,
+                       individual *child1, individual *child2) {
   int i;
   double rand;
   double y1, y2, yl, yu;
@@ -541,7 +540,7 @@ static void crossover (nsga2_ctx *ctx,
           else
             betaq = pow ((1.0/(2.0 - rand*alpha)),(1.0/(ctx->eta_c+1.0)));
           c2 = 0.5*((y1+y2)+betaq*(y2-y1));
-	  /* Enforce constraints: */
+          /* Enforce constraints: */
           if (c1 < yl) c1=yl;
           if (c2 < yl) c2=yl;
           if (c1 > yu) c1=yu;
@@ -577,11 +576,11 @@ static void selection(nsga2_ctx *ctx, population *old_pop, population *new_pop) 
   int i;
   int rand;
   individual *parent1, *parent2;
-  
+
   int *a1 = (int *)Calloc(old_pop->size, int);
   int *a2 = (int *)Calloc(old_pop->size, int);
 
-  for (i=0; i < old_pop->size; ++i) 
+  for (i=0; i < old_pop->size; ++i)
     a1[i] = a2[i] = i;
 
   for (i=0; i < old_pop->size; ++i) {
@@ -607,7 +606,7 @@ static void selection(nsga2_ctx *ctx, population *old_pop, population *new_pop) 
   return;
 }
 
-static void mutate_ind (nsga2_ctx *ctx, individual *ind) {  
+static void mutate_ind (nsga2_ctx *ctx, individual *ind) {
   int j;
   double rnd, delta1, delta2, mut_pow, deltaq;
   double y, yl, yu, val, xy;
@@ -705,39 +704,39 @@ void nondominated_sort(nsga2_ctx *ctx, population *in_pop, const size_t nsorted)
     for (j = i+1; j < in_size; ++j) {
       int dom = check_dominance(ctx, &in_pop->ind[i], &in_pop->ind[j]);
       if (1 > dom) { /* i dominates j */
-	S[in_size * i + j] = 1;
-	S[in_size * j + i] = 0;
-	++n[j];
+        S[in_size * i + j] = 1;
+        S[in_size * j + i] = 0;
+        ++n[j];
       } else if (-1 < dom) { /* j dominates i */
-	S[in_size * i + j] = 0;
-	S[in_size * j + i] = 1;
-	++n[i];
+        S[in_size * i + j] = 0;
+        S[in_size * j + i] = 1;
+        ++n[i];
       } else { /* neither dominates the other */
-	S[in_size * i + j] = 0;
-	S[in_size * j + i] = 0;
+        S[in_size * i + j] = 0;
+        S[in_size * j + i] = 0;
       }
     }
     if (0 == n[i]) { /* Member of first front */
       in_pop->ind[i].rank = 1;
       ++out_size;
     } else { /* Not yet decide what front i belongs to */
-      in_pop->ind[i].rank = -1; 
+      in_pop->ind[i].rank = -1;
     }
   }
-  
+
   while (out_size < nsorted) {
     rank = 1;
     for (i = 0; i < in_size; ++i) {
       if (rank != in_pop->ind[i].rank)  /* Skip all not in current rank */
-	continue;      
+        continue;
       for (j = 0; j < in_size; ++j) {
-	if (1 == S[in_size * i + j]) { /* j in S_i */
-	  --n[j];
-	  if (0 == n[j]) { /* n_j == 0 -> assign rank */
-	    in_pop->ind[j].rank = rank + 1;
-	    ++out_size;
-	  }
-	}
+        if (1 == S[in_size * i + j]) { /* j in S_i */
+          --n[j];
+          if (0 == n[j]) { /* n_j == 0 -> assign rank */
+            in_pop->ind[j].rank = rank + 1;
+            ++out_size;
+          }
+        }
       }
     }
     ++rank;
@@ -746,8 +745,8 @@ void nondominated_sort(nsga2_ctx *ctx, population *in_pop, const size_t nsorted)
   Free(n);
 }
 
-static void crowding_fill (nsga2_ctx *ctx, population *mixed_pop, population *new_pop, 
-			   int count, int front_size, list *elite) {
+static void crowding_fill (nsga2_ctx *ctx, population *mixed_pop, population *new_pop,
+                           int count, int front_size, list *elite) {
   int *dist;
   list *temp;
   int i, j;
@@ -803,17 +802,17 @@ static void fill_nondominated_sort (nsga2_ctx *ctx, population *mixed_pop, popul
       do {
         done = 0;
         flag = check_dominance (ctx, &(mixed_pop->ind[temp1->index]), &(mixed_pop->ind[temp2->index]));
-	switch (flag) {
-	case 1:
+        switch (flag) {
+        case 1:
           insert (pool, temp2->index);
           temp2 = del (temp2);
           front_size--;
           temp2 = temp2->child;
-	  break;
-	case 0:
+          break;
+        case 0:
           temp2 = temp2->child;
-	  break;
-	case -1:
+          break;
+        case -1:
           done = 1;
         }
       } while (!done && temp2 != NULL);
@@ -867,19 +866,19 @@ static int on_pareto_front(individual *ind) {
 }
 
 SEXP do_nsga2(SEXP s_function,
-	      SEXP s_constraint,
-	      SEXP s_env,
-	      SEXP s_obj_dim,
-	      SEXP s_constr_dim,
-	      SEXP s_input_dim,
-	      SEXP s_lower_bound,
-	      SEXP s_upper_bound,
-	      SEXP s_popsize,
-	      SEXP s_generations,
-	      SEXP s_crossing_prob,
-	      SEXP s_crossing_dist,
-	      SEXP s_mutation_prob,
-	      SEXP s_mutation_dist) {
+              SEXP s_constraint,
+              SEXP s_env,
+              SEXP s_obj_dim,
+              SEXP s_constr_dim,
+              SEXP s_input_dim,
+              SEXP s_lower_bound,
+              SEXP s_upper_bound,
+              SEXP s_popsize,
+              SEXP s_generations,
+              SEXP s_crossing_prob,
+              SEXP s_crossing_dist,
+              SEXP s_mutation_prob,
+              SEXP s_mutation_dist) {
   nsga2_ctx ctx;
   unsigned int i, j, gen;
   size_t popsize;
@@ -892,49 +891,49 @@ SEXP do_nsga2(SEXP s_function,
     error("Argument 's_constraint' is not a function.");
   if (!isInteger(s_input_dim))
     error("Argument 's_input_dim' is not an integer.");
-  if (!isInteger(s_constr_dim))    
+  if (!isInteger(s_constr_dim))
     error("Argument 's_constr_dim' is not an integer.");
-  if (!isReal(s_lower_bound))      
+  if (!isReal(s_lower_bound))
     error("Argument 's_lower_bound' is not a real vector.");
-  if (!isReal(s_upper_bound))      
+  if (!isReal(s_upper_bound))
     error("Argument 's_upper_bound' is not a real vector.");
-  if (!isInteger(s_popsize))       
+  if (!isInteger(s_popsize))
     error("Argument 's_popsize' is not an integer.");
-  if (!isInteger(s_generations))   
+  if (!isInteger(s_generations))
     error("Argument 's_generations' is not an integer.");
-  if (!isInteger(s_obj_dim))       
+  if (!isInteger(s_obj_dim))
     error("Argument 's_obj_dim' is not an integer.");
-  if (!isReal(s_crossing_prob))    
+  if (!isReal(s_crossing_prob))
     error("Argument 's_crossing_prob' is not a real.");
-  if (!isInteger(s_crossing_dist)) 
+  if (!isInteger(s_crossing_dist))
     error("Argument 's_crossing_dist' is not an integer.");
-  if (!isReal(s_mutation_prob))    
+  if (!isReal(s_mutation_prob))
     error("Argument 's_mutation_prob' is not a real.");
-  if (!isInteger(s_mutation_dist)) 
+  if (!isInteger(s_mutation_dist))
     error("Argument 's_mutation_dist' is not an integer.");
 
   PROTECT(ctx.environment = s_env);
-  PROTECT(ctx.function_call	= lang2(s_function, R_NilValue));
-  PROTECT(ctx.constraint_call	= lang2(s_constraint, R_NilValue));
-  ctx.objective_dim		= INTEGER(s_obj_dim)[0];
-  ctx.constraint_dim		= INTEGER(s_constr_dim)[0];;
-  ctx.input_dim			= INTEGER(s_input_dim)[0];
-  ctx.lower_input_bound		= REAL(s_lower_bound);
-  ctx.upper_input_bound		= REAL(s_upper_bound);
-  popsize			= INTEGER(s_popsize)[0];  
-  generations			= INTEGER(s_generations);
+  PROTECT(ctx.function_call     = lang2(s_function, R_NilValue));
+  PROTECT(ctx.constraint_call   = lang2(s_constraint, R_NilValue));
+  ctx.objective_dim             = INTEGER(s_obj_dim)[0];
+  ctx.constraint_dim            = INTEGER(s_constr_dim)[0];;
+  ctx.input_dim                 = INTEGER(s_input_dim)[0];
+  ctx.lower_input_bound         = REAL(s_lower_bound);
+  ctx.upper_input_bound         = REAL(s_upper_bound);
+  popsize                       = INTEGER(s_popsize)[0];
+  generations                   = INTEGER(s_generations);
   n_generations                 = length(s_generations);
 
-  ctx.crossing_probability	= REAL(s_crossing_prob)[0];
-  ctx.eta_c			= INTEGER(s_crossing_dist)[0];
-  ctx.mutation_probability	= REAL(s_mutation_prob)[0];
-  ctx.eta_m			= INTEGER(s_mutation_dist)[0];
+  ctx.crossing_probability      = REAL(s_crossing_prob)[0];
+  ctx.eta_c                     = INTEGER(s_crossing_dist)[0];
+  ctx.mutation_probability      = REAL(s_mutation_prob)[0];
+  ctx.eta_m                     = INTEGER(s_mutation_dist)[0];
 
-  ctx.input_mutations		= 0;
-  ctx.input_crossings		= 0;
+  ctx.input_mutations           = 0;
+  ctx.input_crossings           = 0;
 
-  /* 
-   * Allocate parent, child and combined populations 
+  /*
+   * Allocate parent, child and combined populations
    */
   population *parents, *children, *combined;
   parents  = population_alloc(&ctx, popsize);
@@ -957,7 +956,7 @@ SEXP do_nsga2(SEXP s_function,
       evaluate_pop(&ctx, children);
       merge (&ctx, parents, children, combined);
       fill_nondominated_sort (&ctx, combined, parents);
-      
+
       R_CheckUserInterrupt(); /* Allow user interuption */
     }
 
@@ -971,13 +970,13 @@ SEXP do_nsga2(SEXP s_function,
     objective = REAL(s_objective);
     PROTECT(s_pareto_optimal = allocVector(LGLSXP, popsize));
     pareto_optimal = LOGICAL(s_pareto_optimal);
-    
+
     for (i=0; i < popsize; ++i) {
       pareto_optimal[i] = on_pareto_front(&(parents->ind[i]));
       for (j=0; j < ctx.input_dim; ++j)
-	input[popsize * j + i] = parents->ind[i].input[j];
+        input[popsize * j + i] = parents->ind[i].input[j];
       for (j=0; j < ctx.objective_dim; ++j)
-	objective[popsize * j + i] = parents->ind[i].objective[j];      
+        objective[popsize * j + i] = parents->ind[i].objective[j];
     }
     /* Buid result list */
     SEXP s_pres;
@@ -985,8 +984,8 @@ SEXP do_nsga2(SEXP s_function,
     SET_VECTOR_ELT(s_pres, 0, s_input);
     SET_VECTOR_ELT(s_pres, 1, s_objective);
     SET_VECTOR_ELT(s_pres, 2, s_pareto_optimal);
-    UNPROTECT(4); /* s_input, s_objective, s_pareto_optimal, s_pres */  
-    
+    UNPROTECT(4); /* s_input, s_objective, s_pareto_optimal, s_pres */
+
     /* Save in result list: */
     SET_VECTOR_ELT(s_res, gen, s_pres);
   }
