@@ -1,5 +1,5 @@
-^dist/
+^dist
 ^do
-^examples/
+^examples
 ^src/.*\.o
 ^src/.*\.so
