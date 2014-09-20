@@ -48,7 +48,7 @@ nsga2 <- function(fn, idim, odim, ...,
   ## Set cdim = 0 if no cfn was given:
   if (is.null(constraints)) cdim <- 0
   
-  res <- .Call("do_nsga2",
+  res <- .Call(do_nsga2,
                ff, cf, sys.frame(),
                as.integer(odim),
                as.integer(cdim),

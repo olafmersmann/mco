@@ -97,7 +97,7 @@ dominatedHypervolume <- function(x, ref) {
     stop("Reference point and front must have the same dimension.")
 
   ## Note the transopse. do_hv() needs the front in row major format.
-  .Call("do_hv", t(front), ref)
+  .Call(do_hv, t(front), ref)
 }
 
 epsilonIndicator <- function(x, o) {
@@ -112,5 +112,5 @@ epsilonIndicator <- function(x, o) {
   if (any(x.front < 0) || any(o.front < 0))
     stop("Epsilon Indicator only works for fronts which are strictly positive.")
   
-  .Call("do_eps_ind", x.front, o.front)
+  .Call(do_eps_ind, x.front, o.front)
 }

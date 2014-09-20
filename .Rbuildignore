@@ -1,4 +1,5 @@
-examples
-src/*.o
-src/*.so
-mco_*.tar.gz
+^dist/
+^do
+^examples/
+^src/.*\.o
+^src/.*\.so

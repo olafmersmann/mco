@@ -1,4 +1,4 @@
-useDynLib(mco)
+useDynLib(mco, do_nsga2, do_hv, do_eps_ind)
 
 ## mco.R
 export(paretoSet)
