@@ -314,7 +314,7 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
     s_cval = coerceVector(s_cval, REALSXP);
 
     for (i=0; i < pop->size; ++i) {
-      for (j = 0; j < ctx->objective_dim; ++j) {
+      for (j = 0; j < ctx->constraint_dim; ++j) {
         pop->ind[i].constraint[j] = REAL(s_cval)[i + j * pop->size];
         if (pop->ind[i].constraint[j] < 0.0)
           pop->ind[i].constraint_violation += pop->ind[i].constraint[j];
