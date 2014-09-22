@@ -950,7 +950,7 @@ SEXP do_nsga2(SEXP s_function,
   evaluate_pop (&ctx, parents);
   assign_rank_and_crowding_distance (&ctx, parents);
   for (gen=0; gen < n_generations; ++gen) {
-    for (i=2; (i-2) <= generations[gen]; ++i) {
+    for (i=0; i < generations[gen]; ++i) {
       selection (&ctx, parents, children);
       mutation_pop (&ctx, children);
       evaluate_pop(&ctx, children);
