@@ -22,7 +22,7 @@ nsga2 <- function(fn, idim, odim, ...,
       apply(x, 1, fn, ...)
     }
   }
-  
+
   cf <- function(x) {
     if (vectorized) {
       constraints(x, ...)
@@ -44,10 +44,10 @@ nsga2 <- function(fn, idim, odim, ...,
 
   if (!all(generations > 0))
     stop("Cannot go back in time! Your generations argument must be sorted!")
-  
+
   ## Set cdim = 0 if no cfn was given:
   if (is.null(constraints)) cdim <- 0
-  
+
   res <- .Call(do_nsga2,
                ff, cf, sys.frame(),
                as.integer(odim),
@@ -71,7 +71,7 @@ nsga2 <- function(fn, idim, odim, ...,
   return (res)
 }
 
-plot.nsga2 <- function(x, ...) {  
+plot.nsga2 <- function(x, ...) {
   v <- x$value
   o <- x$pareto.optimal
   d <- ncol(v)
