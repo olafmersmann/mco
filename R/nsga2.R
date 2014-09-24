@@ -31,6 +31,22 @@ nsga2 <- function(fn, idim, odim, ...,
   if (popsize %% 4 != 0)
     stop("Population size must be a multiple of 4")
 
+  ## Check bounding box
+  if (any(is.infinite(lower.bounds)) || any(is.infinite(upper.bounds))) {
+    warning("While it is possible to optimize an unconstrained problem, it is not recommended. Please consider adding finite upper and lower bounds.")
+    sane_lower <- -.Machine$double.xmax / 4
+    sane_upper <- .Machine$double.xmax / 4
+    lower.bounds <- ifelse(lower.bounds == -Inf, sane_lower,
+                           ifelse(lower.bounds == Inf, sane_upper,
+                                  lower.bounds))
+
+    upper.bounds <- ifelse(upper.bounds == -Inf, sane_lower,
+                           ifelse(upper.bounds == Inf, sane_upper,
+                                  upper.bounds))
+
+    print(lower.bounds)
+    print(upper.bounds)
+  }
   ## Lag generations:
   ## C source expects each element of generations to be the number of
   ## generations to go forward before saving the next result set. This is

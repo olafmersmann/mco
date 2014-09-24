@@ -90,7 +90,7 @@ static void population_initialize(nsga2_ctx *ctx, population *pop) {
     for (j=0; j<ctx->input_dim; ++j) {
       /* Generate random value between lower and upper bound */
       double delta = ctx->upper_input_bound[j] - ctx->lower_input_bound[j];
-      pop->ind[i].input[j] = ctx->lower_input_bound[j]  + delta*unif_rand();
+      pop->ind[i].input[j] = ctx->lower_input_bound[j] + delta*unif_rand();
     }
   }
   PutRNGstate();
