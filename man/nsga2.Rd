@@ -12,6 +12,11 @@
   when \code{generations} is a single number and
     \deqn{n_eval = popsize * (max(generations) + 1)}
   when \code{generations} is a vector of numbers. 
+  Note the additional generation of evaluations in the above equation. 
+  These stem from the initial population which must be evaluated before the algorithm can start evolving new individuals.
+
+  While the algorithm supports unbounded minimization, it will throw a warning and best results are obtained when a sensible upper and lower bound are given. 
+  No attempt is made to find such a sensible region of interest, instead if any element of the upper or lower bound is infinite, it is replace with a very large number (currently +/-\Sexpr{.Machine$double.xmax/4}).
 }
 \usage{
   nsga2(fn, idim, odim, ...,
