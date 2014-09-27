@@ -2,7 +2,7 @@
 \alias{paretoFront}
 \alias{paretoSet}
 \alias{paretoFilter}
-\title{Pareto Front and pareto set accessor}
+\title{Pareto Front and pareto set getters}
 \description{
   Extract the pareto front or pareto set from an mco result object.
 

@@ -4,7 +4,7 @@
 \description{
   The NSGA-II algorithm minimizes a multidimensional function to approximate its Pareto front and Pareto set.
   It does this by successive sampling of the search space, each such sample is called a \emph{population}. 
-  The number of samples taken is governd by the \code{generations} parameter, the size of the sample by the \code{popsize} parameter.
+  The number of samples taken is governed by the \code{generations} parameter, the size of the sample by the \code{popsize} parameter.
   Each population is obtained by creating so called offspring search points from the best individuals in the previous population. 
   The best individuals are calculated by non-dominated sorting breaking ties using the crowding distance.
   The total number of function evaluations used is 
