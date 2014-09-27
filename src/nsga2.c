@@ -292,6 +292,24 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
 
   /* Now evaluate and copy the result back into the pop sturcture: */
   PROTECT(s_fval = eval(fcall, ctx->environment));
+  /* Make sure user is abiding to API w.r.t. shape of returned matrix */
+  if (isMatrix(s_fval)) {
+    if (nrows(s_fval) != ctx->objective_dim || ncols(s_fval) != pop->size)
+      error("Evaluation of vectorized objective function returned a malformed"
+          "matrix. Expected %i rows and %i columns but got %i rows and "
+          "%i columns.",
+          ctx->objective_dim, pop->size, nrows(s_fval), ncols(s_fval));
+  } else if (isVector(s_fval) && ctx->objective_dim == 1) {
+    if (length(s_fval) != pop->size) {
+      error("Evaluation of vectorized objective funtion returned a vector."
+            "You should return a %i by %i matrix instead!",
+            ctx->objective_dim, pop->size);
+    }
+  } else {
+    error("Evaluation of vectorized objective function returned something"
+          "other than a matrix.");
+  }
+
   s_fval = coerceVector(s_fval, REALSXP);
   for (i=0; i < pop->size; ++i) {
     for (j = 0; j < ctx->objective_dim; ++j) {
@@ -310,8 +328,25 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
    */
   if (ctx->constraint_dim > 0) {
     PROTECT(s_cval = eval(ccall, ctx->environment));
-    s_cval = coerceVector(s_cval, REALSXP);
+    /* Make sure user is abiding to API w.r.t. shape of returned matrix */
+    if (isMatrix(s_cval)) {
+      if (nrows(s_cval) != ctx->constraint_dim || ncols(s_cval) != pop->size)
+        error("Evaluation of vectorized constraint function returned a "
+            "malformed matrix. Expected %i rows and %i columns but got "
+            "%i rows and %i columns.",
+            ctx->constraint_dim, pop->size, nrows(s_cval), ncols(s_cval));
+    } else if (isVector(s_cval) && ctx->constraint_dim == 1) {
+      if (length(s_cval) != pop->size) {
+        error("Evaluation of vectorized constraint function returned "
+              "a vector. You should return a %i by %i matrix instead!",
+              ctx->constraint_dim, pop->size);
+      }
+    } else {
+      error("Evaluation of vectorized constraint function returned something"
+            "other than a matrix.");
+    }
 
+    s_cval = coerceVector(s_cval, REALSXP);
     for (i=0; i < pop->size; ++i) {
       pop->ind[i].constraint_violation = 0.0;
       for (j = 0; j < ctx->constraint_dim; ++j) {
