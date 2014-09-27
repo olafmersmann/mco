@@ -10,9 +10,9 @@ normalizeFront(front, minval, maxval)
 \arguments{
   \item{front}{Matrix containing the pareto front}
   \item{minval}{Vector containing the minimum value of each
-    objective. May be omited.}
+    objective. May be omitted.}
   \item{maxval}{Vector containing the maximum value of each
-    objective. May be omited.}
+    objective. May be omitted.}
 }
 \value{
   Matrix containing the rescaled pareto front.
