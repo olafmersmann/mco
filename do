@@ -15,8 +15,14 @@ package_name <- function() {
 get_version_from_git <- function() {
   tag <- system2("git", c("describe", "--tags", "--match", "v*"),
                  stdout=TRUE, stderr=TRUE)
-  is_clean <- system2("git", c("diff-index", "--quiet", tag)) == 0
+
+  ## Ignoring changes in whitespace is critical. Roxygen may have changed the
+  ## spacing in the regenerated manual pages and esp. in the DESCRIPTION file
+  ## because the y pretty print it compared to what write.dcf does.
+  clean_args <- c("diff-index", "--ignore-space-change", "--quiet", tag)
+  is_clean <- system2("git", clean_args) == 0
   version <- sub("v", "", tag, fixed=TRUE)
+
   ## Reformat version number by chopping of the hash at the end and
   ## appending an appropriate suffix if the tree is dirty.
   version_parts <- strsplit(version, "-")[[1]]
@@ -40,7 +46,7 @@ get_version_from_git <- function() {
 do_build <- function(args) {
   do_update("all")
   message("INFO: Building package.")
-  if (!file.exists("dist")) 
+  if (!file.exists("dist"))
     dir.create("dist")
   fn <- build(".", path="dist", quiet=TRUE)
   messagef("INFO: Package source tarball '%s' created.", fn)
@@ -55,26 +61,28 @@ do_check <- function(args) {
   message("INFO: Checking package.")
   ok <- tryCatch(check(".", document=FALSE, quiet=TRUE, cleanup=FALSE,
                        check_dir=check_dir),
-                  error = function(e) FALSE)
+                 error = function(e) FALSE)
 
   if (ok) {
     ## Read check log lines
     lines <- readLines(check_log)
-    ## Find all lines containing WARNING or not starting with '* '
-    relevant_lines <- unique(sort(c(grep("WARNING", lines),
-                                    grep("^[^*]", lines))))
-
+    ## Find all lines containing stuff we know is OK or irrelevant
+    irrelevant_indexes <- c(grep("^\\* using", lines),
+                            grep("OK$", lines),
+                            grep("^\\* this is package .* version .*$", lines)
+                            )
+    relevant_lines <- lines[-irrelevant_indexes]
     ## Output all relevant lines
     if (length(relevant_lines) > 0) {
-      message("INFO: Found the following warnings:")
-      message(paste("  ", lines[relevant_lines], collapse="\n"))
+      message("INFO: Found the following anomalies in the log:")
+      message(paste("  ", relevant_lines, collapse="\n"))
       ## Because of Issue #507 we may get warnings # related to checking an UTF-8
       ## package in an ASCII locale.
       if (any(grepl(".*with.*encoding.*in.*an.*locale.*",
                     lines[relevant_lines]))) {
         message("INFO: Please ignore the encoding related WARNINGs. They are caused by devtools issue #507.")
       }
-   }
+    }
     ## Remove cruft
     unlink(check_dir, recursive=TRUE)
     message("INFO: Package passed R CMD check.")
@@ -133,7 +141,9 @@ do_update <- function(args=NULL) {
   roclets <- c()
 
   if (length(args) == 0) {
+    message("ERROR: Not enough arguments for update command.")
     do_help("update")
+    quit(save="no", status=1)
   }
   if (args[1] == "all" || args[1] == "documentation" || args[1] == "man") {
     message("INFO: Updating manual pages.")
@@ -152,6 +162,16 @@ do_update <- function(args=NULL) {
   write.dcf(desc, file="DESCRIPTION")
 }
 
+do_checkspelling <- function(args) {
+  dictionaries <- "en_stats.rds"
+  if (file.exists("./.dict.rds"))
+    dictionaries <- c(dictionaries, "./.dict.rds")
+
+  do_update("man")
+  aspell(Sys.glob("man/*.Rd"), filter="Rd",
+         dictionaries=dictionaries)
+}
+
 do <- function(args) {
   if (length(args) < 1) {
     do_help()
@@ -165,6 +185,8 @@ do <- function(args) {
     do_clean(args[-1])
   } else if (args[1] == "update") {
     do_update(args[-1])
+  } else if (args[1] == "check-spelling") {
+    do_checkspelling()
   } else {
     messagef("ERROR: Unknown command '%s'.", args[1])
     do_help()
