@@ -48,8 +48,11 @@
     vector and return a matrix instead of a vector. The matrix is
     structured such that one individual parameter combination is
     contained in each row (the matrix has shape \code{popsize * idim})
-    and each objective is stored in a column of the returned matrix (the
-    returned matrix must have shape \code{popsize * odim})}
+    and each objective is stored in a row of the returned matrix (the
+    returned matrix must have shape \code{odim * popsize}).
+    
+    A vectorized of a function \code{fn} should behave like
+    \code{apply(x, 1, f} for a population stored in the matrix \code{x}. }
 }
 \value{
   If generation is an integer, a list describing the final population
