@@ -55,7 +55,10 @@
   If generation is an integer, a list describing the final population
   with components \code{par}, \code{value} and \code{pareto.optimal}. If
   generations is a vector, a list is returned. The i-th element of the
-  list contains the population after generations[i] generations.  
+  list contains the population after generations[i] generations, this is
+  not necessarily the set of new individuals that were evaluated in this 
+  generation. Some of the new individuals might have been eliminated in
+  the selection phase.  
 }
 \references{
   Deb, K., Pratap, A., and Agarwal, S..

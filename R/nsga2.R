@@ -43,9 +43,6 @@ nsga2 <- function(fn, idim, odim, ...,
     upper.bounds <- ifelse(upper.bounds == -Inf, sane_lower,
                            ifelse(upper.bounds == Inf, sane_upper,
                                   upper.bounds))
-
-    print(lower.bounds)
-    print(upper.bounds)
   }
   ## Lag generations:
   ## C source expects each element of generations to be the number of
