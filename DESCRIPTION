@@ -1,5 +1,5 @@
 Package: mco
-Version: 1.0-14.17
+Version: 1.0-14.18
 Title: Multiple Criteria Optimization Algorithms and Related Functions
 Description: Functions for multiple criteria optimization using genetic
         algorithms and related test problems
@@ -11,7 +11,7 @@ Authors@R: c( person("Olaf", "Mersmann", role=c("aut", "cre"),
         "Bischl", role=c("ctb"), email="bernd_bischl@gmx.net"),
         person("Kalyanmoy", "Deb", role=c("cph")) )
 Depends: R (>= 3.0.0)
-Suggests: scatterplot3d
+Suggests: scatterplot3d, testthat
 License: GPL-2
 URL: http://git.p-value.net/p/mco.git
 LazyData: yes
