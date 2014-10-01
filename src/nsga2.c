@@ -295,9 +295,9 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   /* Make sure user is abiding to API w.r.t. shape of returned matrix */
   if (isMatrix(s_fval)) {
     if (nrows(s_fval) != ctx->objective_dim || ncols(s_fval) != pop->size)
-      error("Evaluation of vectorized objective function returned a malformed"
-          "matrix. Expected %i rows and %i columns but got %i rows and "
-          "%i columns.",
+      error("Evaluation of vectorized objective function returned a "
+          "malformed matrix. Expected %i rows and %i columns but got "
+          "%i rows and %i columns.",
           ctx->objective_dim, pop->size, nrows(s_fval), ncols(s_fval));
   } else if (isVector(s_fval) && ctx->objective_dim == 1) {
     if (length(s_fval) != pop->size) {
@@ -342,15 +342,14 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
               ctx->constraint_dim, pop->size);
       }
     } else {
-      error("Evaluation of vectorized constraint function returned something"
+      error("Evaluation of vectorized constraint function returned something "
             "other than a matrix.");
     }
 
     s_cval = coerceVector(s_cval, REALSXP);
     for (i=0; i < pop->size; ++i) {
-      pop->ind[i].constraint_violation = 0.0;
       for (j = 0; j < ctx->constraint_dim; ++j) {
-        pop->ind[i].constraint[j] = REAL(s_cval)[j + i * ctx->objective_dim];
+        pop->ind[i].constraint[j] = REAL(s_cval)[j + i * ctx->constraint_dim];
         if (pop->ind[i].constraint[j] < 0.0)
           pop->ind[i].constraint_violation += pop->ind[i].constraint[j];
       }
