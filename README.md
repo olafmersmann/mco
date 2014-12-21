@@ -1,4 +1,4 @@
-# emoa
+# mco
 
 ## Install from github
 
@@ -7,5 +7,5 @@ package):
 
 ```splus
 library("devtools")
-install_github("olafmersmann/emoa")
+install_github("olafmersmann/mco")
 ```
