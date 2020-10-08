@@ -105,8 +105,7 @@ plot.nsga2 <- function(x, ...) {
 plot.nsga2.collection <- function(x, ...) {
   oask <- devAskNewPage(TRUE)
   on.exit(devAskNewPage(oask))
-  sapply(x, plot)
-  return;
+  invisible(sapply(x, plot))
 }
 
 paretoSet.nsga2 <- function(x, ...)
