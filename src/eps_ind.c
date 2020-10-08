@@ -30,6 +30,8 @@
 #include <Rinternals.h>
 #include <R_ext/Applic.h>
 
+#include "extern.h"
+
 typedef enum  {additive, multiplicative} method_t;
 
 /*

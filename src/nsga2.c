@@ -21,6 +21,8 @@
 #include <Rinternals.h>
 #include <assert.h>
 
+#include "extern.h"
+
 #define INF 1.0e14
 #define EPS 1.0e-14
 

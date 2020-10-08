@@ -48,6 +48,7 @@
 #include <Rinternals.h>
 #include <R_ext/Applic.h>
 
+#include "extern.h"
 #include "hv.h"
 #include "avl.h"
 
