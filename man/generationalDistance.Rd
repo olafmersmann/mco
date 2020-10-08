@@ -6,7 +6,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Quality measures for MCO solutions}
 \description{
-  Functions to evaulate the quality of the estimated pareto front.
+  Functions to evaluate the quality of the estimated pareto front.
 }
 \usage{
 generationalDistance(x, o)
