@@ -92,7 +92,7 @@ plot.nsga2 <- function(x, ...) {
     ov <- ov[order(ov[,1]),]
     lines (ov, col="red", type="s")
   } else if (d == 3) {
-    if (require("scatterplot3d")) {
+    if (requireNamespace("scatterplot3d", quietly=TRUE)) {
       scatterplot3d::scatterplot3d(v, color=ifelse(o, "red", "blue"))
     } else {
       pairs(v, col=col, pch=pch, ...)
