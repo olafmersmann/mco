@@ -298,13 +298,13 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
   if (isMatrix(s_fval)) {
     if (nrows(s_fval) != ctx->objective_dim || ncols(s_fval) != pop->size)
       error("Evaluation of vectorized objective function returned a "
-          "malformed matrix. Expected %i rows and %i columns but got "
+          "malformed matrix. Expected %zu rows and %zu columns but got "
           "%i rows and %i columns.",
           ctx->objective_dim, pop->size, nrows(s_fval), ncols(s_fval));
   } else if (isVector(s_fval) && ctx->objective_dim == 1) {
     if (length(s_fval) != pop->size) {
       error("Evaluation of vectorized objective funtion returned a vector."
-            "You should return a %i by %i matrix instead!",
+            "You should return a %zu by %zu matrix instead!",
             ctx->objective_dim, pop->size);
     }
   } else {
@@ -334,13 +334,13 @@ static void evaluate_pop (nsga2_ctx *ctx, population *pop) {
     if (isMatrix(s_cval)) {
       if (nrows(s_cval) != ctx->constraint_dim || ncols(s_cval) != pop->size)
         error("Evaluation of vectorized constraint function returned a "
-            "malformed matrix. Expected %i rows and %i columns but got "
+            "malformed matrix. Expected %zu rows and %zu columns but got "
             "%i rows and %i columns.",
             ctx->constraint_dim, pop->size, nrows(s_cval), ncols(s_cval));
     } else if (isVector(s_cval) && ctx->constraint_dim == 1) {
       if (length(s_cval) != pop->size) {
         error("Evaluation of vectorized constraint function returned "
-              "a vector. You should return a %i by %i matrix instead!",
+              "a vector. You should return a %zu by %zu matrix instead!",
               ctx->constraint_dim, pop->size);
       }
     } else {
