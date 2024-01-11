@@ -1,14 +1,13 @@
 Package: mco
-Version: 1.0-16
+Version: 1.16
 Title: Multiple Criteria Optimization Algorithms and Related Functions
 Description: A collection of function to solve multiple criteria optimization problems 
   using genetic algorithms (NSGA-II). Also included is a collection of test functions.
-Authors@R: c(person("Olaf", "Mersmann", role=c("aut", "cre"),
-        email="olafm@p-value.net"), person("Heike", "Trautmann",
-        role=c("ctb"), email="trautmann@wi.uni-muenster.de"),
-        person("Detlef", "Steuer", role=c("ctb"),
-        email="detlef.steuer@hsu-hamburg.de"), person("Bernd",
-        "Bischl", role=c("ctb"), email="bernd_bischl@gmx.net"),
+Authors@R: c(
+        person("Olaf", "Mersmann", role=c("aut", "cre"), email="olafm@p-value.net"), 
+	person("Heike", "Trautmann", role=c("ctb"), email="trautmann@wi.uni-muenster.de"),
+        person("Detlef", "Steuer", role=c("ctb"), email="detlef.steuer@hsu-hamburg.de"),
+	person("Bernd", "Bischl", role=c("ctb"), email="bernd_bischl@gmx.net"),
         person("Kalyanmoy", "Deb", role=c("cph")) )
 Language: en-US
 Depends: R (>= 3.0.0)

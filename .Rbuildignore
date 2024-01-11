@@ -5,3 +5,4 @@
 ^src/.*\.o
 ^src/.*\.so
 README.md
+^CRAN-SUBMISSION$
