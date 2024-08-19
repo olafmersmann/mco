@@ -3,3 +3,4 @@ mco_*.tar.gz
 src/*.o
 src/*.so
 .Rhistory
+cran-comments.md

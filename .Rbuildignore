@@ -6,3 +6,4 @@
 ^src/.*\.so
 README.md
 ^CRAN-SUBMISSION$
+^cran-comments\.md$
