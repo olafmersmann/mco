@@ -1,3 +1,5 @@
+#define STRICT_R_HEADERS 1
+
 #include <R.h>
 #include <Rmath.h>
 #include <Rinternals.h>

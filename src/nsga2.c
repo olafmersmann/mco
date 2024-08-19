@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define STRICT_R_HEADERS 1
+
 #include <R.h>
 #include <R_ext/Utils.h>
 #include <Rinternals.h>
@@ -102,7 +104,7 @@ static void insert (list *node, int x) {
   list *temp;
   if (node == NULL)
       error("Asked to insert a NULL pointer.");
-  temp = (list *)Calloc(1, list);
+  temp = (list *) R_Calloc(1, list);
   temp->index = x;
   temp->child = node->child;
   temp->parent = node;
@@ -122,7 +124,7 @@ static list* del (list *node) {
   if (temp->child!=NULL) {
     temp->child->parent = temp;
   }
-  Free (node);
+  R_Free(node);
   return (temp);
 }
 
@@ -409,21 +411,21 @@ static void assign_crowding_distance_list (nsga2_ctx *ctx, const population *pop
     pop->ind[lst->child->index].crowding_distance = INF;
     return;
   }
-  obj_array = (int **)Calloc(ctx->objective_dim, int *);
-  dist = (int *)Calloc(front_size, int);
+  obj_array = (int **) R_Calloc(ctx->objective_dim, int *);
+  dist = (int *) R_Calloc(front_size, int);
   for (i=0; i<ctx->objective_dim; i++) {
-    obj_array[i] = (int *)Calloc(front_size, int);
+    obj_array[i] = (int *) R_Calloc(front_size, int);
   }
   for (j=0; j<front_size; j++) {
     dist[j] = temp->index;
     temp = temp->child;
   }
   assign_crowding_distance (ctx, pop, dist, obj_array, front_size);
-  Free (dist);
+  R_Free(dist);
   for (i=0; i<ctx->objective_dim; i++) {
-    Free (obj_array[i]);
+    R_Free(obj_array[i]);
   }
-  Free (obj_array);
+  R_Free(obj_array);
   return;
 }
 
@@ -442,20 +444,20 @@ static void assign_crowding_distance_indices (nsga2_ctx *ctx, const population *
     pop->ind[c2].crowding_distance = INF;
     return;
   }
-  obj_array = (int **)Calloc(ctx->objective_dim, int *);
-  dist = (int *)Calloc(front_size, int);
+  obj_array = (int **) R_Calloc(ctx->objective_dim, int *);
+  dist = (int *) R_Calloc(front_size, int);
   for (i=0; i<ctx->objective_dim; i++) {
-    obj_array[i] = (int *)Calloc(front_size, int);
+    obj_array[i] = (int *) R_Calloc(front_size, int);
   }
   for (j=0; j<front_size; j++) {
     dist[j] = c1++;
   }
   assign_crowding_distance (ctx, pop, dist, obj_array, front_size);
-  Free (dist);
+  R_Free(dist);
   for (i=0; i<ctx->objective_dim; i++) {
-    Free (obj_array[i]);
+    R_Free(obj_array[i]);
   }
-  Free (obj_array);
+  R_Free(obj_array);
   return;
 }
 
@@ -468,8 +470,8 @@ static void assign_rank_and_crowding_distance (nsga2_ctx *ctx, population *new_p
   list *orig;
   list *cur;
   list *temp1, *temp2;
-  orig = (list *) Calloc(1, list);
-  cur = (list *) Calloc(1, list);
+  orig = (list *) R_Calloc(1, list);
+  cur = (list *) R_Calloc(1, list);
   orig->index = -1;
   orig->parent = NULL;
   orig->child = NULL;
@@ -531,8 +533,8 @@ static void assign_rank_and_crowding_distance (nsga2_ctx *ctx, population *new_p
     } while (cur->child !=NULL);
     rank+=1;
   } while (orig->child!=NULL);
-  Free (orig);
-  Free (cur);
+  R_Free(orig);
+  R_Free(cur);
   return;
 }
 
@@ -613,8 +615,8 @@ static void selection(nsga2_ctx *ctx, population *old_pop, population *new_pop) 
   int rand;
   individual *parent1, *parent2;
 
-  int *a1 = (int *)Calloc(old_pop->size, int);
-  int *a2 = (int *)Calloc(old_pop->size, int);
+  int *a1 = (int *) R_Calloc(old_pop->size, int);
+  int *a2 = (int *) R_Calloc(old_pop->size, int);
 
   for (i=0; i < old_pop->size; ++i)
     a1[i] = a2[i] = i;
@@ -637,8 +639,8 @@ static void selection(nsga2_ctx *ctx, population *old_pop, population *new_pop) 
     parent2 = tournament (ctx, &old_pop->ind[a2[i+2]], &old_pop->ind[a2[i+3]]);
     crossover (ctx, parent1, parent2, &new_pop->ind[i+2], &new_pop->ind[i+3]);
   }
-  Free(a1);
-  Free(a2);
+  R_Free(a1);
+  R_Free(a2);
   return;
 }
 
@@ -732,8 +734,9 @@ void nondominated_sort(nsga2_ctx *ctx, population *in_pop, const size_t nsorted)
   const size_t in_size  = in_pop->size;
   size_t out_size = 0;
   int rank;
-  unsigned char *S = (unsigned char *)Calloc(in_size*in_size, unsigned char);
-  unsigned int *n = (unsigned int *)Calloc(in_size, unsigned int);
+  unsigned char *S = (unsigned char *) R_Calloc(in_size * in_size,
+                                                unsigned char);
+  unsigned int *n = (unsigned int *) R_Calloc(in_size, unsigned int);
 
   for (i = 0; i < in_size; ++i) {
     n[i] = 0;
@@ -777,8 +780,8 @@ void nondominated_sort(nsga2_ctx *ctx, population *in_pop, const size_t nsorted)
     }
     ++rank;
   }
-  Free(S);
-  Free(n);
+  R_Free(S);
+  R_Free(n);
 }
 
 static void crowding_fill (nsga2_ctx *ctx, population *mixed_pop, population *new_pop,
@@ -787,7 +790,7 @@ static void crowding_fill (nsga2_ctx *ctx, population *mixed_pop, population *ne
   list *temp;
   int i, j;
   assign_crowding_distance_list (ctx, mixed_pop, elite->child, front_size);
-  dist = (int *)Calloc(front_size, int);
+  dist = (int *) R_Calloc(front_size, int);
   temp = elite->child;
   for (j=0; j<front_size; j++) {
     dist[j] = temp->index;
@@ -797,7 +800,7 @@ static void crowding_fill (nsga2_ctx *ctx, population *mixed_pop, population *ne
   for (i=count, j=front_size-1; i<new_pop->size; i++, j--) {
     copy_ind(ctx, &mixed_pop->ind[dist[j]], &new_pop->ind[i]);
   }
-  Free (dist);
+  R_Free(dist);
   return;
 }
 
@@ -811,8 +814,8 @@ static void fill_nondominated_sort (nsga2_ctx *ctx, population *mixed_pop, popul
   list *pool;
   list *elite;
   list *temp1, *temp2;
-  pool = (list *)Calloc(1, list);
-  elite = (list *)Calloc(1, list);
+  pool = (list *) R_Calloc(1, list);
+  elite = (list *) R_Calloc(1, list);
   pool->index = -1;
   pool->parent = NULL;
   pool->child = NULL;
@@ -887,12 +890,12 @@ static void fill_nondominated_sort (nsga2_ctx *ctx, population *mixed_pop, popul
   while (pool != NULL) {
     temp1 = pool;
     pool = pool->child;
-    Free (temp1);
+    R_Free(temp1);
   }
   while (elite != NULL) {
     temp1 = elite;
     elite = elite->child;
-    Free (temp1);
+    R_Free(temp1);
   }
   return;
 }
